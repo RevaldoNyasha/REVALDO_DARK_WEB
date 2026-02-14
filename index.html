@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Revaldo.EXE</title>
+    <meta name="description" content="Arcade-themed developer portfolio — boot sequence landing page." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "background-light": "#f8f5f7",
+                        "background-dark": "#0a0a0f",
+                        "neon-cyan": "#00f3ff",
+                        "neon-purple": "#bc13fe"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- External Styles -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-white selection:bg-primary/40 overflow-hidden">
+
+    <!-- CRT & Grid Background -->
+    <div class="fixed inset-0 crt-overlay z-50"></div>
+    <div class="fixed inset-0 hero-grid-bg opacity-20"></div>
+
+
+
+    <!-- Hero Content -->
+    <main class="relative z-20 min-h-screen flex flex-col items-center justify-center p-6 md:p-12 pt-20">
+
+        <!-- System Metadata - Corners -->
+        <div
+            class="absolute top-8 left-8 text-[10px] md:text-xs font-mono text-primary/60 uppercase tracking-widest hidden md:block">
+            <p>OS: ARCADE_BOOT_V1.0.4</p>
+            <p>KERNEL: 0x8F22-ALPHA</p>
+            <p class="mt-1">STATUS: <span class="text-neon-cyan glow-cyan">OPTIMIZED</span></p>
+        </div>
+        <div
+            class="absolute top-8 right-8 text-right text-[10px] md:text-xs font-mono text-primary/60 uppercase tracking-widest hidden md:block">
+            <p>CPU_LOAD: 12%</p>
+            <p>MEM: 4.2GB / 16GB</p>
+            <p class="mt-1">LOCATION: <span class="text-white">NODE_01</span></p>
+        </div>
+
+        <!-- Decorative Horizontal Lines -->
+        <div class="absolute top-1/4 left-0 w-1/4 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent">
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary glow-text"></div>
+        </div>
+        <div
+            class="absolute bottom-1/4 right-0 w-1/4 h-px bg-gradient-to-l from-transparent via-primary/40 to-transparent">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary glow-text"></div>
+        </div>
+
+        <!-- Main Branding Section -->
+        <div class="text-center space-y-8 max-w-4xl mx-auto">
+            <div class="relative inline-block">
+                <h1 class="text-7xl md:text-9xl font-bold tracking-tighter text-primary glow-text italic relative z-10">
+                    ROOT.EXE
+                </h1>
+                <div class="absolute -inset-1 bg-primary/10 blur-xl"></div>
+            </div>
+
+            <!-- Terminal Text Subtitle -->
+            <div class="space-y-2 bg-background-dark/80 border-y border-white/5 py-6 px-4 backdrop-blur-sm">
+                <div
+                    class="flex items-center justify-center space-x-2 text-sm md:text-lg font-mono text-neon-cyan glow-cyan tracking-tight">
+                    <span class="opacity-50">$</span>
+                    <p class="uppercase" id="typewriter-text">NUST Computer Science Student | Junior Developer |
+                        LARAVEL</p>
+                    <span class="w-2.5 h-5 bg-neon-cyan cursor-blink"></span>
+                </div>
+            </div>
+
+            <!-- Call to Action — navigates to dash.html -->
+            <div class="pt-8">
+                <a href="dash.html"
+                    class="group relative inline-block px-12 py-4 bg-primary text-white font-bold text-xl tracking-[0.2em] uppercase rounded transition-all duration-300 hover:scale-105 active:scale-95 btn-glow">
+                    <span class="relative z-10">[ ENTER SYSTEM ]</span>
+                    <div class="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-neon-cyan"></div>
+                    <div class="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-neon-cyan"></div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer / Progress Bar Decoration -->
+        <div class="absolute bottom-12 w-full max-w-md px-8">
+            <div class="flex justify-between text-[10px] font-mono text-primary/40 mb-2">
+                <span>BOOT_SEQUENCE</span>
+                <span>100% READY</span>
+            </div>
+            <div class="h-1 w-full bg-primary/10 rounded-full overflow-hidden">
+                <div class="h-full w-full bg-primary shadow-[0_0_10px_#f4258c]"></div>
+            </div>
+        </div>
+
+        <!-- Drifting Particles -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+            <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-neon-cyan rounded-full"></div>
+            <div class="absolute top-2/3 left-1/2 w-1.5 h-1.5 bg-primary rounded-full"></div>
+            <div class="absolute top-1/2 left-3/4 w-1 h-1 bg-white rounded-full"></div>
+            <div class="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-primary rounded-full"></div>
+            <div class="absolute top-10 right-1/4 w-1 h-1 bg-neon-cyan rounded-full"></div>
+        </div>
+    </main>
+
+    <!-- Side Decoration (hidden on mobile) -->
+    <div class="fixed right-8 top-1/2 -translate-y-1/2 flex-col items-center space-y-4 opacity-40 hidden md:flex">
+        <div class="h-12 w-px bg-gradient-to-t from-primary to-transparent"></div>
+        <span class="rotate-90 text-[10px] font-mono tracking-widest text-primary uppercase">Enter</span>
+        <div class="h-12 w-px bg-gradient-to-b from-primary to-transparent"></div>
+    </div>
+
+    <!-- Background Image -->
+    <div class="fixed inset-0 -z-10 opacity-5">
+        <img alt="Retro grid aesthetic" class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAulhQT3B5l0Xlwo3iMtWc_-vEcbRBdu8TdVpbl6D1qZ4jt_Aje_SPfPThJWe0dbG6Z-6qXDFPUd2Ph5bLJIBS1Q9G8XNxbi9cTq9VPCptFIzcFSXJ5-zQx2VVuQpXmtuHtyUd13k2Ei_t_gNtGSorYomL26mkBTpAMbLGjltLg6_tPJSHzijEVNv_glZuU_t-pYt9Qb1AGIo6P_aLed81Nux2MRnElRYyDwXaiKD5o36aI5JpEBDM48e154wHyVn2K6iVrX6At84n_" />
+    </div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Revaldo - Terminal Dashboard</title>
+    <meta name="description"
+        content="Revaldo - Terminal Dashboard Portfolio — Dashboard with skills, projects, experience, and contact." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "background-light": "#f8f5f7",
+                        "background-dark": "#0a0a0f",
+                        "neon-cyan": "#00f3ff",
+                        "neon-purple": "#bc13fe"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- External Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-white font-display">
+
+    <!-- Rate Limit Dialog -->
+    <div id="rate-limit-dialog" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onclick="document.getElementById('rate-limit-dialog').classList.add('hidden')"></div>
+        <!-- Modal -->
+        <div class="relative bg-background-dark border border-primary/60 rounded p-6 md:p-8 max-w-sm w-full text-center"
+            style="box-shadow: 0 0 30px rgba(244,37,140,0.3), inset 0 0 15px rgba(244,37,140,0.1);">
+            <!-- Terminal dots -->
+            <div
+                class="absolute -top-3 left-6 px-3 bg-background-dark border border-primary/50 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                <span class="text-[9px] font-bold tracking-widest text-primary uppercase">RATE_LIMIT</span>
+            </div>
+            <!-- Icon -->
+            <div class="mb-4 mt-2">
+                <span class="material-icons text-yellow-500 text-4xl">schedule</span>
+            </div>
+            <!-- Message -->
+            <h3 class="text-primary font-bold text-sm tracking-[0.15em] uppercase mb-2">TRANSMISSION COOLDOWN</h3>
+            <p class="text-white/60 text-xs leading-relaxed mb-1">
+                A message from this email has already been transmitted.
+            </p>
+            <p class="text-neon-cyan text-xs font-bold tracking-wider mb-1">
+                You can send again after <span class="text-primary" id="cooldown-time">24 hours</span>.
+            </p>
+            <p id="cooldown-remaining" class="text-[10px] text-white/40 font-mono mb-5"></p>
+            <!-- Dismiss -->
+            <button onclick="document.getElementById('rate-limit-dialog').classList.add('hidden')"
+                class="px-6 py-2 bg-primary/20 border border-primary text-primary text-xs font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-all">
+                ACKNOWLEDGED
+            </button>
+        </div>
+    </div>
+
+    <!-- CRT Overlay -->
+    <div class="crt-overlay"></div>
+
+    <div class="min-h-screen grid-bg flex flex-col p-4 md:p-8 relative">
+
+        <!-- =============================================
+             SYSTEM HEADER / NAV
+             ============================================= -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b-2 border-primary/40 pb-4">
+            <div class="flex items-center gap-6">
+                <a href="index.html"
+                    class="bg-primary px-4 py-2 rounded-sm rotate-[-1deg] hover:scale-105 transition-transform">
+                    <h1 class="text-2xl font-bold tracking-tighter text-background-dark">REVALDO_OS v4.2</h1>
+                </a>
+                <div class="hidden md:block">
+                    <p class="text-xs text-primary/60 tracking-widest uppercase">System Status</p>
+                    <p class="text-sm neon-text-cyan font-bold uppercase tracking-widest">Online / User: Dev_ROOTS_01
+                    </p>
+                </div>
+            </div>
+            <nav class="flex gap-1 mt-4 md:mt-0 flex-wrap">
+
+                <a class="nav-link px-6 py-2 bg-white/5 border border-white/10 text-white/40 hover:text-white hover:border-primary transition-all text-sm font-bold tracking-widest uppercase"
+                    href="#contact">Contact Me </a>
+            </nav>
+        </header>
+
+        <!-- =============================================
+             DASHBOARD SECTION
+             ============================================= -->
+        <main id="dashboard" class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+
+            <!-- LEFT PANEL: SKILLS & CERTIFICATIONS -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- SKILLS_ARRAY -->
+                <section class="neon-border-cyan bg-background-dark/80 p-5">
+                    <h2
+                        class="text-neon-cyan text-sm font-bold mb-6 tracking-[0.2em] uppercase flex items-center gap-2">
+                        <span class="w-2 h-2 bg-neon-cyan animate-pulse"></span>
+                        SKILLS_ARRAY
+                    </h2>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-[10px] uppercase text-neon-cyan/80 mb-2">
+                                <span>Frontend</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="flex">
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] uppercase text-neon-cyan/80 mb-2">
+                                <span>Backend_Core</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="flex">
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] uppercase text-neon-cyan/80 mb-2">
+                                <span>AI TOOLS</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="flex">
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment led-active"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                                <div class="led-segment"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CERTIFICATION_DATA -->
+                <section class="border border-white/10 bg-background-dark/80 p-5">
+                    <h2 class="text-white/60 text-[10px] font-bold mb-4 tracking-[0.2em] uppercase">CERTIFICATION_DATA
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div
+                            class="aspect-square neon-border-pink flex flex-col items-center justify-center p-2 text-center group cursor-pointer hover:bg-primary/10">
+                            <i class="material-icons text-primary text-xl mb-1">verified_user</i>
+                            <span class="text-[8px] uppercase font-bold text-primary">Spring Boot</span>
+                        </div>
+                        <div
+                            class="aspect-square border border-white/10 flex flex-col items-center justify-center p-2 text-center text-white/40">
+                            <i class="material-icons text-xl mb-1">code</i>
+                            <span class="text-[8px] uppercase font-bold">LOADING_AWS Practitioner</span>
+                        </div>
+                        <div
+                            class="aspect-square border border-white/10 flex flex-col items-center justify-center p-2 text-center text-white/40">
+                            <i class="material-icons text-xl mb-1">security</i>
+                            <span class="text-[8px] uppercase font-bold"> loading Oracle_Java Certified</span>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <!-- CENTER PANEL: LEVEL SELECT (PROJECTS) -->
+            <div class="lg:col-span-6 space-y-6">
+                <section class="h-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-neon-pink text-sm font-bold tracking-[0.2em] uppercase flex items-center gap-2">
+                            <span class="w-2 h-2 bg-primary"></span>
+                            LEVEL_SELECT_GRID
+                        </h2>
+                        <div class="text-[10px] text-white/40 uppercase tracking-widest">3 Items Loaded</div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Project Card 01 -->
+                        <div class="pixel-card neon-border-pink bg-background-dark p-1 cursor-pointer">
+                            <div class="relative aspect-video overflow-hidden">
+                                <img alt="Project View"
+                                    class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-300"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3dFMnipCKXMaBhoSPdIYLFL6x0HVFoCU22K_jWWB0SudZS_G9xNJUkF5HYJY0nlNSbBvCNFUZm_cnGvyA1iRib9bCI01QjD8Bzf0ixkY9C42tSvpHqGVcEDMGNwmq1VGO2miUc5oYi2O8rDdrHZP92-slOfAERbJynUVvJ0D1yrz1y0HhfntzlcOCdo2YmhBRAJ9OCIpD79ysIbcD7wFTFk-hmtZvlOkVFvjs54PtbnrJT6htPGIooaiq9lJeALW1IGEuA2pMi_f3" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent">
+                                </div>
+                                <div class="absolute bottom-3 left-3">
+                                    <span
+                                        class="bg-primary text-background-dark text-[10px] font-bold px-2 py-0.5">LVL_01</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="text-primary font-bold text-lg tracking-tight mb-1">AGRIC_BOT</h3>
+                                <p class="text-white/60 text-xs mb-4 leading-relaxed">A self driving agricultural robot
+                                    that detects weeds using computer vision and machine learning.</p>
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-t border-primary/20 pt-3 gap-2">
+                                    <span class="text-[10px] text-primary/60 font-mono tracking-tighter">BUILD:
+                                        python</span>
+                                    <a href="https://youtu.be/af7Zp0kLB2k?si=-EpQ28MnHd2pP1N8" target="_blank"
+                                        class="w-full sm:w-auto">
+                                        <button
+                                            class="w-full sm:w-auto text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 px-3 py-1.5 hover:bg-white hover:text-black transition-colors">PRESS_START</button></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Card 02 -->
+                        <div class="pixel-card neon-border-pink bg-background-dark p-1 cursor-pointer">
+                            <div class="relative aspect-video overflow-hidden">
+                                <img alt="Project View"
+                                    class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-300"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrHgpumQOcHQnyCAEaVFPDkJCja21kVk_A84OanFaKh0Lxd2T18e8RPM0XcDDnzEDsrQKkyhz6Zznuxzso_OKJmX8AILcLmItMsjgRx17ulN3FW3dix-uv84kwN_pLoldEos_uEqf_g02aLTJSirZn1uroNW3sVhPwdNnJt3PYD7rpIJjs7Z0ZFnX6MQ0auSuBubYhLveuntX-xn0x26TcIRp6S5JFxCzGa9vG3d7URfhshBjuKss-btG-Kx2i4dqQYd3DSOkaoqgH" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent">
+                                </div>
+                                <div class="absolute bottom-3 left-3">
+                                    <span
+                                        class="bg-primary text-background-dark text-[10px] font-bold px-2 py-0.5">LVL_02</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="text-primary font-bold text-lg tracking-tight mb-1">Plant Disease
+                                    Classification</h3>
+                                <p class="text-white/60 text-xs mb-4 leading-relaxed">Created a web application and
+                                    mobile scanner that
+                                    classifies plant diseases using computer vision and machine learning and suggests
+                                    solutions.</p>
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-t border-primary/20 pt-3 gap-2">
+                                    <span class="text-[10px] text-primary/60 font-mono tracking-tighter">BUILD:
+                                        python</span>
+                                    <a href="https://youtu.be/z_3dyslNjsw?si=m2Fvpg9pWr93KN8P" target="_blank"
+                                        class="w-full sm:w-auto">
+                                        <button
+                                            class="w-full sm:w-auto text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 px-3 py-1.5 hover:bg-white hover:text-black transition-colors">PRESS_DEMO</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Card 03 (Spans 2 columns) -->
+                        <div class="pixel-card neon-border-pink bg-background-dark p-1 cursor-pointer md:col-span-2">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="relative w-full md:w-1/2 aspect-video overflow-hidden">
+                                    <img alt="Project View"
+                                        class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-300"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDasWvtkLISXheCaznzIleSXz4ZtmZLDWPysHW93fDSwup_mAuu9eFVnuXBgvGLiCUjOF-8C-Xg9285Ba76HjDb0NCIngSE8har7MFBoFbzBF7FeRBwV3Nl3UAuPZUie83-SkwJh5Kv2ZnoEXWBvJwjLr5hy5zuTDlxLdI6UDJtpXvzFZBfi7g6P6qZkyjvmWN_4ekj9fwZ3zsCb9GknQ0WnNmlCPoQyCDQmkzMmnP1lhAeytxADihv7AKNgoeNMilzGRbs3mwaZbgQ" />
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-r from-transparent to-background-dark hidden md:block">
+                                    </div>
+                                </div>
+                                <div class="p-6 md:w-1/2 flex flex-col justify-center">
+                                    <div class="mb-2">
+                                        <span
+                                            class="bg-primary text-background-dark text-[10px] font-bold px-2 py-0.5">LVL_03</span>
+                                    </div>
+                                    <h3 class="text-primary font-bold text-xl tracking-tight mb-2 uppercase">
+                                        Doctor ADA</h3>
+                                    <p class="text-white/60 text-sm mb-6 leading-relaxed">A simple AI chatbot that can
+                                        answer questions about health and wellness and suggests near hospitals nearby
+                                        using CEREBRAS.
+                                    </p>
+                                    <div class="flex gap-4 w-full sm:w-auto">
+                                        <a href="https://youtu.be/dxF2hNezRc8?si=1DuSImu6Hi9AdC72" target="_blank"
+                                            class="w-full sm:w-auto">
+                                            <button
+                                                class="w-full sm:w-auto bg-primary text-background-dark text-xs font-bold px-6 py-2.5 uppercase hover:bg-white transition-colors">Watch
+                                                Demo</button>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- RIGHT PANEL: MISSION LOG (EXPERIENCE) -->
+            <div class="lg:col-span-3">
+                <section class="neon-border-cyan bg-background-dark/80 flex flex-col h-full min-h-[500px]">
+                    <div class="p-4 border-b border-neon-cyan/30 flex justify-between items-center bg-neon-cyan/5">
+                        <h2 class="text-neon-cyan text-xs font-bold tracking-[0.2em] uppercase">MISSION_LOG.EXE</h2>
+                        <i class="material-icons text-neon-cyan text-sm">terminal</i>
+                    </div>
+                    <div class="p-4 font-mono text-[11px] space-y-4 overflow-y-auto max-h-[600px]">
+                        <div>
+                            <span class="text-neon-cyan/50">[2025.08.12]</span>
+                            <p class="text-white mt-1">INITIALIZING INTERNSHIP_01...</p>
+                            <p class="text-neon-cyan/80">LOCATION: HARARE</p>
+                            <p class="text-white/60 leading-relaxed mt-1">&gt; IT support for ministry of justice
+                                Networks.<br />&gt; Improved Network performance by 40%.</p>
+                            <span class="text-green-400 font-bold tracking-widest">[STATUS: SUCCESS]</span>
+                        </div>
+                        <div class="border-t border-white/5 pt-4">
+                            <span class="text-neon-cyan/50">[2025.09.01]</span>
+                            <p class="text-white mt-1">INITIALIZING INTERNSHIP_02...</p>
+                            <p class="text-neon-cyan/80">INSTITUTION: ARSOC_TECHNOLOGIES</p>
+                            <p class="text-white/60 leading-relaxed mt-1">&gt; Developed a web application for
+                                ARSOC Technologies.<br />&gt; Specialized in Laravel , .net , React Systems.</p>
+                            <span class="text-green-400 font-bold tracking-widest">[STATUS: ONGOING]</span>
+                        </div>
+                        <div class="border-t border-white/5 pt-4">
+                            <span class="text-neon-cyan/50">[2025.09.01]</span>
+                            <p class="text-white mt-1">INITIALIZING FREELANCE_NODE...</p>
+                            <p class="text-neon-cyan/80">CLIENT: RED_PANDA_MEDIA</p>
+                            <p class="text-white/60 leading-relaxed mt-1">&gt; Developed clients websites
+                                <br />&gt; Integrated google maps api for autocompletion.
+                                <br />&gt; Implemented responsive design for all devices.
+                            </p>
+                            <span class="text-green-400 font-bold tracking-widest">[STATUS: COMPLETE]</span>
+                        </div>
+                        <div class="pt-2 animate-pulse">
+                            <span class="text-neon-cyan">_</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto p-4 bg-background-dark border-t border-neon-cyan/20">
+                        <div class="flex items-center gap-2 text-[10px] text-white/40">
+                            <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_green]"></span>
+                            <span>RECV_DATA: 1024KB/S</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- =============================================
+             CONTACT / EMAIL SECTION (below dashboard)
+             ============================================= -->
+        <section id="contact"
+            class="relative flex items-center justify-center py-10 md:py-14 mt-6 overflow-hidden section-fade">
+
+            <!-- Terminal Container -->
+            <div
+                class="w-full max-w-xl bg-background-dark/80 backdrop-blur-md border border-primary/50 terminal-border p-5 md:p-8 relative z-10 rounded">
+
+                <!-- Terminal Header -->
+                <div
+                    class="absolute -top-3 left-6 px-3 bg-background-dark border border-primary/50 flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500/80"></div>
+                    <p class="text-[10px] font-bold tracking-widest text-primary uppercase">Console_v.4.0.1</p>
+                </div>
+
+                <!-- Title -->
+                <div class="mb-6 text-center">
+                    <h2
+                        class="text-lg md:text-xl font-bold tracking-[0.2em] text-primary neon-text-pink mb-1 uppercase">
+                        [ TRANSMIT_MESSAGE.EXE ]
+                    </h2>
+                    <div class="flex items-center justify-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                        <p class="text-[9px] tracking-widest text-primary/60 uppercase">Secure comms channel</p>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form id="contact-form" action="#" class="contact-form space-y-6" method="POST">
+                    <!-- Name Field -->
+                    <div class="relative group">
+                        <input
+                            class="w-full bg-transparent border-b-2 border-primary/30 py-2 px-0 focus:outline-none focus:border-primary transition-all duration-300 text-white text-sm placeholder-transparent"
+                            id="name" name="name" placeholder=" " required type="text" />
+                        <label
+                            class="ml-2  absolute left-0 top-2 text-primary/40 text-xs tracking-[0.15em] pointer-events-none transition-all duration-300 uppercase"
+                            for="name">
+                            NAME
+                        </label>
+                        <div
+                            class="absolute right-0 top-2 text-primary/20 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
+                            <span class="material-icons text-sm">qr_code_scanner</span>
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="relative group">
+                        <input
+                            class="w-full bg-transparent border-b-2 border-primary/30 py-2 px-0 focus:outline-none focus:border-primary transition-all duration-300 text-white text-sm placeholder-transparent"
+                            id="email" name="email" placeholder=" " required type="email" />
+                        <label
+                            class=" ml-2 absolute left-0 top-2 text-primary/40 text-xs tracking-[0.15em] pointer-events-none transition-all duration-300 uppercase"
+                            for="email">
+                            EMAIL
+                        </label>
+                        <div
+                            class="absolute right-0 top-2 text-primary/20 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
+                            <span class="material-icons text-sm">alternate_email</span>
+                        </div>
+                    </div>
+
+                    <!-- Message Field -->
+                    <div class="relative group">
+                        <textarea
+                            class="w-full bg-transparent border-b-2 border-primary/30 py-2 px-0 focus:outline-none focus:border-primary transition-all duration-300 text-white text-sm placeholder-transparent resize-none"
+                            id="message" name="message" placeholder=" " required rows="3"></textarea>
+                        <label
+                            class=" ml-2 absolute left-0 top-2 text-primary/40 text-xs tracking-[0.15em] pointer-events-none transition-all duration-300 uppercase"
+                            for="message">
+                            MESSAGE
+                        </label>
+                        <div
+                            class="absolute right-0 top-2 text-primary/20 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
+                            <span class="material-icons text-sm">terminal</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="pt-3 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="text-[9px] text-primary/40 font-mono space-y-0.5">
+                            <p>&gt; INTEGRITY... OK</p>
+                            <p>&gt; UPLINK... 100%</p>
+                        </div>
+                        <button
+                            class="group relative w-full md:w-auto px-8 py-3 bg-primary text-background-dark font-bold text-xs tracking-[0.2em] uppercase rounded-sm transition-all duration-300 hover:scale-105 active:scale-95 button-glow"
+                            type="submit">
+                            <span class="relative z-10 flex items-center justify-center gap-2">
+                                PUSH_TO_SEND
+                                <span class="material-icons text-base">bolt</span>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Decorative Corner Accents -->
+                <div class="absolute -bottom-1.5 -left-1.5 w-5 h-5 border-b-2 border-l-2 border-primary"></div>
+                <div class="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2 border-primary"></div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             FOOTER
+             ============================================= -->
+        <footer
+            class="mt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-white/30 uppercase tracking-[0.3em] font-bold border-t border-white/10 pt-4">
+            <div class="flex gap-8 mb-4 md:mb-0 flex-wrap">
+                <span class="hover:text-primary cursor-pointer transition-colors">OS_VER: 4.2.0-STABLE</span>
+                <span class="hover:text-neon-cyan cursor-pointer transition-colors">MEMORY: 64GB_VIRTUAL</span>
+                <span class="hover:text-neon-purple cursor-pointer transition-colors">KERNAL: NEON_CORE</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex gap-2">
+                    <div class="w-1.5 h-1.5 bg-primary/40"></div>
+                    <div class="w-1.5 h-1.5 bg-primary/60"></div>
+                    <div class="w-1.5 h-1.5 bg-primary/80"></div>
+                    <div class="w-1.5 h-1.5 bg-primary"></div>
+                </div>
+                <span>DESIGNED_BY_<i>REAVALDO.EXE</i> </span>
+            </div>
+        </footer>
+
+        <!-- Fixed Action Buttons -->
+        <div class="fixed bottom-4 right-4 flex gap-2 z-[110]">
+            <a href="#dashboard"
+                class="w-10 h-10 flex items-center justify-center bg-background-dark border border-white/20 text-white/50 hover:text-white hover:border-primary transition-all">
+                <i class="material-icons text-sm">arrow_upward</i>
+            </a>
+            <a href="#contact"
+                class="w-10 h-10 flex items-center justify-center bg-background-dark border border-primary text-primary hover:bg-primary hover:text-white transition-all">
+                <i class="material-icons text-sm">mail</i>
+            </a>
+        </div>
+    </div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
