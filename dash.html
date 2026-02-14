@@ -54,6 +54,13 @@
 
 <body class="bg-background-light dark:bg-background-dark text-white font-display">
 
+    <!-- Redirect to index if user hasn't entered through welcome page -->
+    <script>
+        if (!sessionStorage.getItem('entered')) {
+            window.location.replace('index.html');
+        }
+    </script>
+
     <!-- Rate Limit Dialog -->
     <div id="rate-limit-dialog" class="fixed inset-0 z-[200] flex items-center justify-center p-4 hidden">
         <!-- Backdrop -->
